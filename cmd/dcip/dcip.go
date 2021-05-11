@@ -14,12 +14,12 @@ var CLI struct {
 	Of struct {
 		Host      string `arg:"" name:"[host|name]" help:"remote host optional or just a container name"`
 		Container string `arg:"" name:"name" optional:"" help:"container name"`
-	} `cmd:"" passthrough:"" help:"get container ip."`
+	} `cmd:"" help:"get container ip."`
 	Export struct {
 		Host          string `arg:"" name:"host" help:"ssh host. example: debian@example.host"`
 		ContainerPort string `arg:"" name:"cport" help:"remote container name and port. example: pg:5432"`
 		LocalAddr     string `arg:"" name:"lport" optional:"" help:"local bind address and port. default bind address is 0.0.0.0, default port is remote container port. example: 127.0.0.1:5432 or 5432"`
-	} `cmd:"" passthrough:"" help:"export remote container port to local host."`
+	} `cmd:"" help:"export remote container port to local host."`
 	Debug   bool             `name:"debug" short:"D" optional:""`
 	Version kong.VersionFlag `short:"V"`
 }
