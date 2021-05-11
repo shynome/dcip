@@ -32,7 +32,7 @@ func reportError(err error) {
 
 func main() {
 	ctx := kong.Parse(&CLI,
-		kong.Vars{"version": "0.1.0"},
+		kong.Vars{"version": "0.1.1"},
 	)
 	switch ctx.Command() {
 	case "of <[host|name]>":
