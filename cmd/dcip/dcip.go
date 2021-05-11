@@ -12,15 +12,15 @@ import (
 
 var CLI struct {
 	Of struct {
-		Host      string `arg name:"[host|name]" passthrough help:"remote host optional or just a container name"`
-		Container string `arg name:"name" optional help:"container name"`
-	} `cmd help:"get container ip."`
+		Host      string `arg:"" name:"[host|name]" help:"remote host optional or just a container name"`
+		Container string `arg:"" name:"name" optional:"" help:"container name"`
+	} `cmd:"" help:"get container ip."`
 	Export struct {
-		Host          string `arg name:"host" passthrough help:"ssh host. example: debian@example.host"`
-		ContainerPort string `arg name:"cport" help:"remote container name and port. example: pg:5432"`
-		LocalAddr     string `arg name:"lport" optional help:"local bind address and port. default bind address is 0.0.0.0, default port is remote container port. example: 127.0.0.1:5432 or 5432"`
-	} `cmd help:"export remote container port to local host."`
-	Debug   bool             `name:"debug" short:"D" optional`
+		Host          string `arg:"" name:"host" help:"ssh host. example: debian@example.host"`
+		ContainerPort string `arg:"" name:"cport" help:"remote container name and port. example: pg:5432"`
+		LocalAddr     string `arg:"" name:"lport" optional:"" help:"local bind address and port. default bind address is 0.0.0.0, default port is remote container port. example: 127.0.0.1:5432 or 5432"`
+	} `cmd:"" help:"export remote container port to local host."`
+	Debug   bool             `name:"debug" short:"D" optional:""`
 	Version kong.VersionFlag `short:"V"`
 }
 
@@ -48,7 +48,7 @@ func main() {
 		if params.Host == "" {
 			cmd = RunCommand(cmdStr)
 		} else {
-			cmd = RunSSHCommand(params.Host, cmdStr)
+			cmd = RunSSHCommand(ParseHostOptions(params.Host), cmdStr)
 		}
 		PrintCmd(cmd)
 		result, err := cmd.CombinedOutput()
@@ -81,7 +81,7 @@ func main() {
 			lbind = localAddrArr[0]
 			lport = localAddrArr[1]
 		}
-		getIPCmd := RunSSHCommand(params.Host, dcip.MakeGetContainerIPCmd(container))
+		getIPCmd := RunSSHCommand(ParseHostOptions(params.Host), dcip.MakeGetContainerIPCmd(container))
 		PrintCmd(getIPCmd)
 		cipBytes, err := getIPCmd.CombinedOutput()
 		cip := strings.Replace(string(cipBytes), "\n", "", 1)
@@ -89,7 +89,7 @@ func main() {
 			reportError(err)
 			return
 		}
-		cmdStr := dcip.MakeForwardPortCmd(params.Host, string(cip)+":"+cport, lbind+":"+lport)
+		cmdStr := dcip.MakeForwardPortCmd(ParseHostOptions(params.Host), string(cip)+":"+cport, lbind+":"+lport)
 		cmd := RunSSHCommand(cmdStr, "")
 		cmd.Stdin = os.Stdin
 		cmd.Stderr = os.Stderr
