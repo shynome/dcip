@@ -28,3 +28,7 @@ dcip export debian@example.host main_pg:5432 0.0.0.0:5432
 # 可省略本地端口以及监听地址, 监听地址默认是 0.0.0.0, 本地端口默认为容器端口
 dcip export debian@example.host main_pg:5432
 ```
+
+## 进阶使用
+
+现在可以在 host 上传递 ssh options 了, 示例: `dcip of ' -J cn-host usa-host' pg`, 用法就是加上单引号并且使用空格开头
