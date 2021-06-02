@@ -2,7 +2,7 @@ package dcip
 
 import "fmt"
 
-var getNetworks = "docker network ls --format='{{.Name}}' | grep -E 'bridge|docker_gwbridge'"
+var getNetworks = "docker network ls  --filter=driver=bridge --format='{{.Name}}'"
 var getAllConatinersIP = fmt.Sprintf("for dn in $(%s);do docker network inspect $dn --format '{{range $k,$c:=.Containers}}{{$k}}/{{.IPv4Address}}{{println}}{{end}}';done", getNetworks)
 var getContainerID = "docker ps --latest -q --no-trunc --filter='name=%s'"
 var getIPOnly = "awk -F '/' '{print $2}'"
